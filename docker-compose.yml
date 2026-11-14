@@ -1,0 +1,18 @@
+# Solo la aplicación. Se conecta al SQL Server de Windows (el mismo que usa Tomcat/IntelliJ),
+# así que ambos (8080 y 8081) leen y escriben en la MISMA base de datos.
+services:
+  app:
+    build: .
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      PRESTAMOS_DB_HOST: host.docker.internal
+      PRESTAMOS_DB_PORT: 1433
+      PRESTAMOS_DB_NAME: prestamos_equipos
+      PRESTAMOS_DB_USER: sa
+      PRESTAMOS_DB_PASS: ${DB_SA_PASSWORD}
+      PRESTAMOS_DB_TRUST_CERT: "true"
+      PRESTAMOS_AI_API_KEY: ${PRESTAMOS_AI_API_KEY:-}
+      PRESTAMOS_AI_MODEL: ${PRESTAMOS_AI_MODEL:-gpt-5.6-luna}
+    ports:
+      - "8080:8080"

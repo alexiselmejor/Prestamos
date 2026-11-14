@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Cookie de sesión con SameSite=Lax (equivale a session.cookie_samesite de PHP). -->
+<Context path="/prestamos-equipos">
+  <CookieProcessor sameSiteCookies="lax"/>
+</Context>

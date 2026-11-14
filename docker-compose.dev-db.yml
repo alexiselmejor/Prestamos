@@ -1,0 +1,17 @@
+# Solo la base de datos, para desarrollar con Tomcat desde IntelliJ:
+#   docker compose -f docker-compose.dev-db.yml up -d
+# Queda en localhost:3307 (usuario root; contraseña = DB_ROOT_PASSWORD del .env).
+services:
+  db:
+    image: mariadb:11.4
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?Define DB_ROOT_PASSWORD en .env}
+      MARIADB_DATABASE: prestamos_equipos
+      TZ: America/Lima
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    volumes:
+      - dev_db_data:/var/lib/mysql
+    ports:
+      - "${DB_PUBLISHED_PORT:-3307}:3306"
+volumes:
+  dev_db_data:
