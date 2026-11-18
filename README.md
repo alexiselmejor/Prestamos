@@ -222,3 +222,5 @@ La migración es idempotente y no elimina ni modifica los registros existentes. 
 - La voz depende del soporte del navegador. Si no está disponible, el chat escrito sigue funcionando.
 
 Documentación del proveedor: [Chat Completions API](https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create) · [Modelos API](https://developers.openai.com/api/docs/models).
+#   P r e s t a m o s  
+ 
