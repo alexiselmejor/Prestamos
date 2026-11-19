@@ -1,6 +1,6 @@
 package edu.universidad.presta.config;
 
-import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
+import org.postgresql.ds.PGSimpleDataSource;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -17,18 +17,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Punto único de acceso a la base de datos, con un pool casero de conexiones.
+ * Punto único de acceso a la base de datos PostgreSQL, con un pool casero de conexiones.
  * Abrir una conexión nueva es lento (TCP + TLS + login), así que se reutilizan.
  * Quien llama a getConnection() sigue haciendo close() (try-with-resources); ese close()
  * devuelve la conexión al pool en vez de cerrarla.
- *
- * Diferencias con la versión original:
- *  - El pool es perezoso: no abre nada al cargar la clase, así que la base puede crearse antes
- *    (Database.init) y un SQL Server apagado no impide que arranque la aplicación.
- *  - Al devolver una conexión se restablece autoCommit=true (Db.tx lo apaga) y se hace rollback
- *    de lo que haya quedado pendiente; si no, los guardados siguientes no se confirmarían.
- *  - Se descartan las conexiones caídas y se reemplazan por otras nuevas.
- *  - Las credenciales vienen de AppConfig (app.properties / variables de entorno), no del código.
  */
 public final class Conexion {
 
@@ -39,20 +31,27 @@ public final class Conexion {
     private static final AtomicInteger creadas = new AtomicInteger();
     private static volatile boolean cerrado;
 
+    static {
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            LOG.log(Level.SEVERE, "No se encontró el driver JDBC de PostgreSQL", e);
+        }
+    }
+
     private Conexion() {
         // Clase de utilidad: no se instancia
     }
 
-    /** Conexión nueva sin pasar por el pool (la usa Database.init para hablar con "master"). */
+    /** Conexión nueva sin pasar por el pool hacia la base indicada. */
     public static Connection abrirDirecta(String baseDeDatos) throws SQLException {
-        SQLServerDataSource ds = new SQLServerDataSource();
-        ds.setServerName(AppConfig.dbHost());
-        ds.setPortNumber(AppConfig.dbPort());
+        PGSimpleDataSource ds = new PGSimpleDataSource();
+        ds.setServerNames(new String[] { AppConfig.dbHost() });
+        ds.setPortNumbers(new int[] { AppConfig.dbPort() });
         ds.setDatabaseName(baseDeDatos);
         ds.setUser(AppConfig.dbUser());
         ds.setPassword(AppConfig.dbPassword());
-        ds.setEncrypt("true");
-        ds.setTrustServerCertificate(AppConfig.dbTrustCertificate());
+        ds.setSslMode("require");
         return ds.getConnection();
     }
 
