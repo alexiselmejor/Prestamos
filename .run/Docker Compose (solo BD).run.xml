@@ -1,4 +1,4 @@
-<component name="ProjectRunConfigurationManager">
+ <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Docker Compose (solo BD)" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
     <deployment type="docker-compose.yml">
       <settings>

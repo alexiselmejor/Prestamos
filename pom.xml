@@ -24,6 +24,7 @@
       <version>6.0.0</version>
       <scope>provided</scope>
     </dependency>
+
     <!-- JSTL 3.0 (c:forEach, c:if, ...): API + implementación -->
     <dependency>
       <groupId>jakarta.servlet.jsp.jstl</groupId>
@@ -35,12 +36,14 @@
       <artifactId>jakarta.servlet.jsp.jstl</artifactId>
       <version>3.0.1</version>
     </dependency>
-    <!-- Driver JDBC de SQL Server (el mismo que usa PlantillaWeb) -->
+
+    <!-- Driver JDBC de PostgreSQL (Neon / Railway) -->
     <dependency>
-      <groupId>com.microsoft.sqlserver</groupId>
-      <artifactId>mssql-jdbc</artifactId>
-      <version>13.2.0.jre11</version>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.7.14</version>
     </dependency>
+
     <!-- BCrypt: compatible con password_hash() de PHP -->
     <dependency>
       <groupId>org.mindrot</groupId>
@@ -64,7 +67,7 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
+        <artifactId>maven-war-plugin</groupId>
         <version>3.5.1</version>
       </plugin>
     </plugins>
